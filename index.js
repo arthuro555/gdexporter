@@ -1,2 +1,6 @@
-const gd = require("./getGD").getGDSync();
-let Project = new gd.Project()
+require("./getGD").getGD().then(gd => {
+    let p = new gd.Project();
+    let js = gd.JsPlatform.get();
+    console.log(p)
+    console.log(gd)
+})
