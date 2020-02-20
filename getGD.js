@@ -24,11 +24,11 @@ exports.getGD = function() {
 	if(!fs.existsSync(path.join(".", "libGD.js"))){
 		return new Promise(exports.downloadGD)
 		  .then((resolve) => {
-			resolve(require("./libGD.js")());
+			resolve(require("./libGD.js"));
 		});
 	}
 	return new Promise((resolve) => {
-		resolve(require("./libGD.js")());
+		resolve(require("./libGD.js"));
 	})
 }
  

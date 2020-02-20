@@ -102,3 +102,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# GD Files as they are heavy :,( (200 mb) plus they are already on gh
+GDJSRuntime/

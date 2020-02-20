@@ -25,6 +25,7 @@
   "homepage": "https://github.com/arthuro555/gdexporter#readme",
   "dependencies": {
     "follow-redirects": "^1.10.0",
-    "isomorphic-git": "^0.78.4"
+    "isomorphic-git": "^0.78.4",
+    "lodash": "^4.17.15"
   }
 }
