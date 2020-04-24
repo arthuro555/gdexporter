@@ -1,19 +1,18 @@
 const fs = require("fs");
-const git = require("isomorphic-git");
+const spawn = require("child_process").spawn;
 const join = require("path").join;
 const some = require('lodash/some');
 
-git.plugins.set('fs', fs)
 const gdjsRoot = join(".", "GDJSRuntime")
 
 /**
  * Run extensions tests and check for any non-empty results.
  */
 const runExtensionSanityTests = (
-  gd /*: any */,
-  extension /*: gdPlatformExtension*/,
-  jsExtensionModule /*: JsExtensionModule*/
-) /*: ExtensionLoadingResult*/ => {
+  gd,
+  extension,
+  jsExtensionModule
+) => {
   if (!jsExtensionModule.runExtensionSanityTests) {
     return {
       error: true,
@@ -190,24 +189,22 @@ function makeExtensionsLoader({gd, filterExamples,}){
   };
 
 module.exports = (gd) => {
-  return new Promise(async (resolve) => {
+  
     if(!fs.existsSync(gdjsRoot)) {
-        console.log("Downloading GDevelop (Might take a while)...")
+        console.log("Downloading GDevelop JS Runtime (Might take a while)...")
         fs.mkdirSync(gdjsRoot);
-        git.clone({ 
-          dir: gdjsRoot, 
-          force: true, 
-          filepaths: ['GDJS/Runtime'],
-          url: 'https://github.com/4ian/GDevelop',
-          ref: 'master',
-          singleBranch: true,
-          depth: 1
-        }).then(() => {
-          console.log("Done!")
-          resolve(makeExtensionsLoader({gd: gd, filterExamples: true}));
-        });
+		return new Promise((resolver) => {
+        	spawn("cd " + gdjsRoot + " && git init && git remote add -f origin https://github.com/4ian/GDevelop").addListener("close", resolver)
+		}).then(() => {
+			return fs.writeFile(join(gdjsRoot, ".git", "info", "sparse-checkout"), "GDJS/Runtime");
+		}).then(() => {
+			return new Promise((resolver) => {
+				spawn("cd " + gdjsRoot + " && git pull origin master").addListener("close", resolver);
+			});
+		}).then(() => makeExtensionsLoader({gd: gd, filterExamples: true}))
     } else {
-      resolve(makeExtensionsLoader({gd: gd, filterExamples: true}));
-    }
-  });
+		return new Promise((resolve) => {
+      		resolve(makeExtensionsLoader({gd: gd, filterExamples: true}));
+		});
+	}
 }
