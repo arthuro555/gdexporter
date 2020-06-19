@@ -24,7 +24,6 @@
   },
   "homepage": "https://github.com/arthuro555/gdexporter#readme",
   "dependencies": {
-    "follow-redirects": "^1.10.0",
-    "lodash": "^4.17.15"
+    "follow-redirects": "^1.10.0"
   }
 }
