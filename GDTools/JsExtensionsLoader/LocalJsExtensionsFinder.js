@@ -26,7 +26,6 @@ const findJsExtensionModules = () => {
     );
     return new Promise((resolve, reject) => {
       fs.readdir(extensionsRoot, (error, extensionFolders) => {
-        console.log("hi")
         if (error) {
           return reject(error);
         }

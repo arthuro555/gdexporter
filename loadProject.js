@@ -1,5 +1,9 @@
 const extensionLoader = require("./GDTools/JsExtensionsLoader/LocalJsExtensionsLoader");
 const projectLoader = require("./GDTools/LocalProjectOpener");
+const eventsFunctionsLoader = require("./GDTools/EventsFunctionsExtensionsLoader/index").loadProjectEventsFunctionsExtensions;
+const eventFunctionsWriter = require("./GDTools/EventsFunctionsExtensionsLoader/LocalEventsFunctionCodeWriter").makeLocalEventsFunctionCodeWriter;
+
+let project;
 
 exports.load = function(projectLocation) {
   projectLocation = projectLocation || "./Project/game.json";
@@ -16,5 +20,10 @@ exports.load = function(projectLocation) {
       console.log("Loaded File"); 
       projectFile.content.properties.projectFile = projectLocation;
       return projectLoader.loadSerializedProject(gd, projectFile.content);
-    });
+    })
+    .then(projectLoaded => {
+      project = projectLoaded;
+      return eventsFunctionsLoader(project, eventFunctionsWriter(), arg => arg);
+    })
+    .then(() => project);
 }
