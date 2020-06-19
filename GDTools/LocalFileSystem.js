@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const os = require('os');
 
-exports = {
+exports.fs = {
   mkDir: function(path) {
     try {
       fs.mkdirsSync(path);

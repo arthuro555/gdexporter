@@ -20,7 +20,7 @@ const checkIfPathHasJsExtensionModule = extensionFolderPath => {
 
 const findJsExtensionModules = () => {
   return Promise.resolve().then(() => {
-    const extensionsRoot = path.join(__dirname, "..", "..", "GDJSRuntime", 'Extensions');
+    const extensionsRoot = path.join(__dirname, "..", "..", "Runtime", 'Extensions');
     console.info(
       `Searching for JS extensions (file called JsExtension.js) in ${extensionsRoot}...`
     );
