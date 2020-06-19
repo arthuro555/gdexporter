@@ -11,9 +11,9 @@ exports.load = function(projectLocation) {
       for(let i = 0; i < exts.size(); i++) console.log(exts.at(i).getName());
     })
     */
-    .then(() => projectLoader.readProjectFile(projectLocation))
+    .then(() => projectLoader.loadProjectFiles(projectLocation))
     .then(projectFile => {
       console.log("Loaded File"); 
-      return projectLoader.loadSerializedProject(gd, projectFile);
+      return projectLoader.loadSerializedProject(gd, projectFile.content);
     });
 }
