@@ -1,9 +1,4 @@
-const some = (array) => {
-  for(let item of array) {
-    if(!item) return true;
-  }
-  return false;
-}
+const some = require("lodash/some");
 
 /**
  * Run extensions tests and check for any non-empty results.

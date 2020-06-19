@@ -1,5 +1,6 @@
 const extensionLoader = require("./GDTools/JsExtensionsLoader/LocalJsExtensionsLoader");
 const projectLoader = require("./GDTools/LocalProjectOpener");
+const exporter = require("./GDTools/ExportProject");
 
 require("./GDTools/getGD").getGD()
   .then(() => extensionLoader(gd).loadAllExtensions())
@@ -16,18 +17,5 @@ require("./GDTools/getGD").getGD()
   })
   .then(project => {
     console.log("Loaded Project")
-    const layout = project.getLayoutAt(0);
-    const layoutCodeGenerator = new gd.LayoutCodeGenerator(project);
-    console.log("Generate test code")
-    const code = layoutCodeGenerator.generateLayoutCompleteCode(
-      layout,
-      new gd.SetString(),
-      true
-    );
-
-    console.log("Generation finished");
-    //console.log(code);
-
-    layout.delete();
-    layoutCodeGenerator.delete();
+    exporter.exportHTML5(project, "./Exported")
   });

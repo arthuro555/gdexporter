@@ -2,8 +2,6 @@
 const path = require('path');
 const fs = require('fs');
 
-const findGDJS = () => Promise.resolve(path.join(".", "GDJSRuntime"));
-
 const checkIfPathHasJsExtensionModule = extensionFolderPath => {
   return new Promise(resolve => {
     const jsExtensionModulePath = path.join(
@@ -21,8 +19,8 @@ const checkIfPathHasJsExtensionModule = extensionFolderPath => {
 };
 
 const findJsExtensionModules = () => {
-  return findGDJS().then((gdjsRoot) => {
-    const extensionsRoot = path.join(__dirname, "..", "..", gdjsRoot, 'Extensions');
+  return Promise.resolve().then(() => {
+    const extensionsRoot = path.join(__dirname, "..", "..", "GDJSRuntime", 'Extensions');
     console.info(
       `Searching for JS extensions (file called JsExtension.js) in ${extensionsRoot}...`
     );
