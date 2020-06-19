@@ -14,6 +14,7 @@ exports.load = function(projectLocation) {
     .then(() => projectLoader.loadProjectFiles(projectLocation))
     .then(projectFile => {
       console.log("Loaded File"); 
+      projectFile.content.properties.projectFile = projectLocation;
       return projectLoader.loadSerializedProject(gd, projectFile.content);
     });
 }
