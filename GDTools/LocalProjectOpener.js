@@ -24,7 +24,7 @@ module.exports = {
     return module.exports.readProjectFile(filePath).then(object => {
       return unsplit(object, {
         getReferencePartialObject: referencePath => {
-          return readJSONFile(path.join(projectPath, referencePath) + '.json');
+          return module.exports.readProjectFile(path.join(projectPath, referencePath) + '.json');
         },
         isReferenceMagicPropertyName: '__REFERENCE_TO_SPLIT_OBJECT',
         // Limit unsplitting to depth 3 (which would allow properties of layouts/external layouts/external events
