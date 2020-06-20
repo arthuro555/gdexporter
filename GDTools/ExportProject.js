@@ -4,13 +4,16 @@ const path = require("path");
 
 const gdjsRoot = path.join(__dirname, "..")
 
-exports.exportHTML5 = function(project, outputDir) {
+exports.exportPIXI = function(project, outputDir, options) {
     const fileSystem = assignIn(
       new gd.AbstractFileSystemJS(),
       localFileSystem
     );
     const exporter = new gd.Exporter(fileSystem, gdjsRoot);
     const exportOptions = new gd.MapStringBoolean();
+    for(let key in options) {
+      exportOptions.set(key, options[key]);
+    }
     exporter.exportWholePixiProject(
       project,
       outputDir,
