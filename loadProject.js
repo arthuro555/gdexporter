@@ -23,7 +23,7 @@ exports.load = function(projectLocation) {
     })
     .then(projectLoaded => {
       project = projectLoaded;
-      return eventsFunctionsLoader(project, eventFunctionsWriter(), arg => arg);
+      return eventsFunctionsLoader(project, eventFunctionsWriter());
     })
     .then(() => project);
 }

@@ -36,8 +36,7 @@ const getBehaviorFunctionCodeNamespace = (
  */
 const loadProjectEventsFunctionsExtensions = (
   project,
-  eventsFunctionCodeWriter,
-  i18n
+  eventsFunctionCodeWriter
 )                       => {
   return Promise.all(
     // First pass: generate extensions from the events functions extensions,
@@ -48,7 +47,7 @@ const loadProjectEventsFunctionsExtensions = (
       return loadProjectEventsFunctionsExtension(
         project,
         project.getEventsFunctionsExtensionAt(i),
-        { skipCodeGeneration: true, eventsFunctionCodeWriter, i18n }
+        { skipCodeGeneration: true, eventsFunctionCodeWriter, }
       );
     })
   ).then(() =>
@@ -61,7 +60,6 @@ const loadProjectEventsFunctionsExtensions = (
           {
             skipCodeGeneration: false,
             eventsFunctionCodeWriter,
-            i18n,
           }
         );
       })
@@ -289,7 +287,6 @@ function generateBehavior(
 
     // Declare the instructions/expressions for properties
     declareBehaviorPropertiesInstructionAndExpressions(
-      options.i18n,
       behaviorMetadata,
       eventsBasedBehavior
     );

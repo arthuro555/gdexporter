@@ -41,9 +41,9 @@ const declareBehaviorMetadata = (
 
   // $FlowExpectedError - we're creating a behavior
   generatedBehavior.updateProperty = function(
-    behaviorContent                     ,
-    propertyName        ,
-    newValue        
+    behaviorContent,
+    propertyName,
+    newValue
   ) {
     let propertyFound = false;
     mapVector(eventsBasedBehavior.getPropertyDescriptors(), property => {
@@ -283,9 +283,8 @@ module.exports.declareBehaviorInstructionOrExpressionMetadata = declareBehaviorI
  * (see `JsExtension.js` files of extensions).
  */
 const declareBehaviorPropertiesInstructionAndExpressions = (
-  i18n          ,
-  behaviorMetadata                    ,
-  eventsBasedBehavior                       
+  behaviorMetadata,
+  eventsBasedBehavior
 )       => {
   const addObjectAndBehaviorParameters =                                       (
     instructionOrExpression   
@@ -330,7 +329,7 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
       propertyName
     );
     const propertyLabel =
-      property.getLabel() || i18n._(t`${propertyName} property`);
+      property.getLabel() || `${propertyName} property`;
 
     if (propertyType === 'String' || propertyType === 'Choice') {
       addObjectAndBehaviorParameters(
@@ -349,8 +348,8 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
         behaviorMetadata.addScopedCondition(
           gd.EventsBasedBehavior.getPropertyConditionName(propertyName),
           propertyLabel,
-          i18n._(t`Compare the content of ${propertyLabel}`),
-          i18n._(t`the property ${propertyName}`),
+          `Compare the content of ${propertyLabel}`,
+          `the property ${propertyName}`,
           eventsBasedBehavior.getFullName() || eventsBasedBehavior.getName(),
           'res/function32.png',
           'res/function.png'
@@ -364,8 +363,8 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
         behaviorMetadata.addScopedAction(
           gd.EventsBasedBehavior.getPropertyActionName(propertyName),
           propertyLabel,
-          i18n._(t`Change the content of ${propertyLabel}`),
-          i18n._(t`the property ${propertyName}`),
+          `Change the content of ${propertyLabel}`,
+          `the property ${propertyName}`,
           eventsBasedBehavior.getFullName() || eventsBasedBehavior.getName(),
           'res/function32.png',
           'res/function.png'
@@ -393,8 +392,8 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
         behaviorMetadata.addScopedCondition(
           gd.EventsBasedBehavior.getPropertyConditionName(propertyName),
           propertyLabel,
-          i18n._(t`Compare the value of ${propertyLabel}`),
-          i18n._(t`the property ${propertyName}`),
+          `Compare the value of ${propertyLabel}`,
+          `the property ${propertyName}`,
           eventsBasedBehavior.getFullName() || eventsBasedBehavior.getName(),
           'res/function32.png',
           'res/function.png'
@@ -408,8 +407,8 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
         behaviorMetadata.addScopedAction(
           gd.EventsBasedBehavior.getPropertyActionName(propertyName),
           propertyLabel,
-          i18n._(t`Change the value of ${propertyLabel}`),
-          i18n._(t`the property ${propertyName}`),
+          `Change the value of ${propertyLabel}`,
+          `the property ${propertyName}`,
           eventsBasedBehavior.getFullName() || eventsBasedBehavior.getName(),
           'res/function32.png',
           'res/function.png'
@@ -424,8 +423,8 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
         behaviorMetadata.addScopedCondition(
           gd.EventsBasedBehavior.getPropertyConditionName(propertyName),
           propertyLabel,
-          i18n._(t`Check the value of ${propertyLabel}`),
-          i18n._(t`Property ${propertyName} of _PARAM0_ is true`),
+          `Check the value of ${propertyLabel}`,
+          `Property ${propertyName} of _PARAM0_ is true`,
           eventsBasedBehavior.getFullName() || eventsBasedBehavior.getName(),
           'res/function32.png',
           'res/function.png'
@@ -438,14 +437,14 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
         behaviorMetadata.addScopedAction(
           gd.EventsBasedBehavior.getPropertyActionName(propertyName),
           propertyLabel,
-          i18n._(t`Update the value of ${propertyLabel}`),
-          i18n._(t`Set property ${propertyName} of _PARAM0_ to _PARAM2_`),
+          `Update the value of ${propertyLabel}`,
+          `Set property ${propertyName} of _PARAM0_ to _PARAM2_`,
           eventsBasedBehavior.getFullName() || eventsBasedBehavior.getName(),
           'res/function32.png',
           'res/function.png'
         )
       )
-        .addParameter('yesorno', i18n._(t`New value to set`), '', false)
+        .addParameter('yesorno', `New value to set`, '', false)
         .getCodeExtraInformation()
         .setFunctionName(setterName);
     }
