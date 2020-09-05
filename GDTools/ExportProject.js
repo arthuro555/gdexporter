@@ -2,7 +2,7 @@ const localFileSystem = require("./LocalFileSystem").fs;
 const assignIn = require("lodash/assignIn");
 const path = require("path");
 
-const gdjsRoot = path.join(__dirname, "..")
+const gdjsRoot = path.join(__dirname)
 
 exports.exportPIXI = function(project, outputDir, options) {
     const fileSystem = assignIn(

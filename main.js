@@ -1,7 +1,7 @@
 const exporter = require("./GDTools/ExportProject");
 
 // Programmatic API
-exports.loadProject = require("./loadProject").load;
+exports.loadProject = require("./GDTools/loadProject").load;
 exports.exporter = function(projectPath, outputDir, buildType) {
     let projectPromise = exports.loadProject(projectPath);
     switch (buildType) {
