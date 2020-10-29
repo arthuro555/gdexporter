@@ -1,6 +1,6 @@
 {
   "name": "gdexporter",
-  "version": "2.3.0",
+  "version": "2.3.101",
   "description": "A CLI exporter for GDevelop projects",
   "main": "./main.js",
   "scripts": {
