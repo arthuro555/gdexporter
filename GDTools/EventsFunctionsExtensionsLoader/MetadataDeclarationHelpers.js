@@ -31,7 +31,7 @@ const declareBehaviorMetadata = (
   extension,
   eventsBasedBehavior                       
 )                     => {
-  const generatedBehavior = new gd.BehaviorJsImplementation();
+  const generatedBehavior = new _GD.BehaviorJsImplementation();
 
   // The functions below are keeping a reference to eventsBasedBehavior.
   // This should be safe as if eventsBasedBehavior is deleted (i.e: the behavior
@@ -67,7 +67,7 @@ const declareBehaviorMetadata = (
 
   // $FlowExpectedError - we're creating a behavior
   generatedBehavior.getProperties = function(behaviorContent) {
-    var behaviorProperties = new gd.MapStringPropertyDescriptor();
+    var behaviorProperties = new _GD.MapStringPropertyDescriptor();
     mapVector(eventsBasedBehavior.getPropertyDescriptors(), property => {
       const newProperty = property.toPropertyDescriptor();
       const propertyType         = newProperty.getType();
@@ -125,7 +125,7 @@ const declareBehaviorMetadata = (
       'res/function24.png',
       eventsBasedBehavior.getName(), // Class name is the name, actually unused
       generatedBehavior,
-      new gd.BehaviorsSharedData()
+      new _GD.BehaviorsSharedData()
     )
     .setObjectType(eventsBasedBehavior.getObjectType());
 };
@@ -157,7 +157,7 @@ module.exports.isBehaviorLifecycleEventsFunction = isBehaviorLifecycleEventsFunc
  * that will be called automatically by the game engine.
  */
 const isExtensionLifecycleEventsFunction = (functionName        ) => {
-  return gd.EventsFunctionsExtension.isExtensionLifecycleEventsFunction(
+  return _GD.EventsFunctionsExtension.isExtensionLifecycleEventsFunction(
     functionName
   );
 };
@@ -173,7 +173,7 @@ const declareInstructionOrExpressionMetadata = (
   eventsFunction                  
 )                                               => {
   const functionType = eventsFunction.getFunctionType();
-  if (functionType === gd.EventsFunction.Expression) {
+  if (functionType === _GD.EventsFunction.Expression) {
     return extension.addExpression(
       eventsFunction.getName(),
       eventsFunction.getFullName() || eventsFunction.getName(),
@@ -182,7 +182,7 @@ const declareInstructionOrExpressionMetadata = (
         eventsFunctionsExtension.getName(),
       'res/function.png'
     );
-  } else if (functionType === gd.EventsFunction.StringExpression) {
+  } else if (functionType === _GD.EventsFunction.StringExpression) {
     return extension.addStrExpression(
       eventsFunction.getName(),
       eventsFunction.getFullName() || eventsFunction.getName(),
@@ -191,7 +191,7 @@ const declareInstructionOrExpressionMetadata = (
         eventsFunctionsExtension.getName(),
       'res/function.png'
     );
-  } else if (functionType === gd.EventsFunction.Condition) {
+  } else if (functionType === _GD.EventsFunction.Condition) {
     return extension.addCondition(
       eventsFunction.getName(),
       eventsFunction.getFullName() || eventsFunction.getName(),
@@ -227,7 +227,7 @@ const declareBehaviorInstructionOrExpressionMetadata = (
   eventsFunction                  
 )                                               => {
   const functionType = eventsFunction.getFunctionType();
-  if (functionType === gd.EventsFunction.Expression) {
+  if (functionType === _GD.EventsFunction.Expression) {
     return behaviorMetadata.addExpression(
       eventsFunction.getName(),
       eventsFunction.getFullName() || eventsFunction.getName(),
@@ -235,7 +235,7 @@ const declareBehaviorInstructionOrExpressionMetadata = (
       eventsBasedBehavior.getFullName() || eventsBasedBehavior.getName(),
       'res/function.png'
     );
-  } else if (functionType === gd.EventsFunction.StringExpression) {
+  } else if (functionType === _GD.EventsFunction.StringExpression) {
     return behaviorMetadata.addStrExpression(
       eventsFunction.getName(),
       eventsFunction.getFullName() || eventsFunction.getName(),
@@ -243,7 +243,7 @@ const declareBehaviorInstructionOrExpressionMetadata = (
       eventsBasedBehavior.getFullName() || eventsBasedBehavior.getName(),
       'res/function.png'
     );
-  } else if (functionType === gd.EventsFunction.Condition) {
+  } else if (functionType === _GD.EventsFunction.Condition) {
     // Use the new "scoped" way to declare an instruction, because
     // we want to prevent any conflict between free functions and
     // behaviors (that can totally have functions with the same name).
@@ -322,10 +322,10 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
   mapVector(eventsBasedBehavior.getPropertyDescriptors(), property => {
     const propertyType = property.getType();
     const propertyName = property.getName();
-    const getterName = gd.BehaviorCodeGenerator.getBehaviorPropertyGetterName(
+    const getterName = _GD.BehaviorCodeGenerator.getBehaviorPropertyGetterName(
       propertyName
     );
-    const setterName = gd.BehaviorCodeGenerator.getBehaviorPropertySetterName(
+    const setterName = _GD.BehaviorCodeGenerator.getBehaviorPropertySetterName(
       propertyName
     );
     const propertyLabel =
@@ -334,7 +334,7 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
     if (propertyType === 'String' || propertyType === 'Choice') {
       addObjectAndBehaviorParameters(
         behaviorMetadata.addStrExpression(
-          gd.EventsBasedBehavior.getPropertyExpressionName(propertyName),
+          _GD.EventsBasedBehavior.getPropertyExpressionName(propertyName),
           propertyLabel,
           propertyLabel,
           eventsBasedBehavior.getFullName() || eventsBasedBehavior.getName(),
@@ -346,7 +346,7 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
 
       addObjectAndBehaviorParameters(
         behaviorMetadata.addScopedCondition(
-          gd.EventsBasedBehavior.getPropertyConditionName(propertyName),
+          _GD.EventsBasedBehavior.getPropertyConditionName(propertyName),
           propertyLabel,
           `Compare the content of ${propertyLabel}`,
           `the property ${propertyName}`,
@@ -361,7 +361,7 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
 
       addObjectAndBehaviorParameters(
         behaviorMetadata.addScopedAction(
-          gd.EventsBasedBehavior.getPropertyActionName(propertyName),
+          _GD.EventsBasedBehavior.getPropertyActionName(propertyName),
           propertyLabel,
           `Change the content of ${propertyLabel}`,
           `the property ${propertyName}`,
@@ -378,7 +378,7 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
     } else if (propertyType === 'Number') {
       addObjectAndBehaviorParameters(
         behaviorMetadata.addExpression(
-          gd.EventsBasedBehavior.getPropertyExpressionName(propertyName),
+          _GD.EventsBasedBehavior.getPropertyExpressionName(propertyName),
           propertyLabel,
           propertyLabel,
           eventsBasedBehavior.getFullName() || eventsBasedBehavior.getName(),
@@ -390,7 +390,7 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
 
       addObjectAndBehaviorParameters(
         behaviorMetadata.addScopedCondition(
-          gd.EventsBasedBehavior.getPropertyConditionName(propertyName),
+          _GD.EventsBasedBehavior.getPropertyConditionName(propertyName),
           propertyLabel,
           `Compare the value of ${propertyLabel}`,
           `the property ${propertyName}`,
@@ -405,7 +405,7 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
 
       addObjectAndBehaviorParameters(
         behaviorMetadata.addScopedAction(
-          gd.EventsBasedBehavior.getPropertyActionName(propertyName),
+          _GD.EventsBasedBehavior.getPropertyActionName(propertyName),
           propertyLabel,
           `Change the value of ${propertyLabel}`,
           `the property ${propertyName}`,
@@ -421,7 +421,7 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
     } else if (propertyType === 'Boolean') {
       addObjectAndBehaviorParameters(
         behaviorMetadata.addScopedCondition(
-          gd.EventsBasedBehavior.getPropertyConditionName(propertyName),
+          _GD.EventsBasedBehavior.getPropertyConditionName(propertyName),
           propertyLabel,
           `Check the value of ${propertyLabel}`,
           `Property ${propertyName} of _PARAM0_ is true`,
@@ -435,7 +435,7 @@ const declareBehaviorPropertiesInstructionAndExpressions = (
 
       addObjectAndBehaviorParameters(
         behaviorMetadata.addScopedAction(
-          gd.EventsBasedBehavior.getPropertyActionName(propertyName),
+          _GD.EventsBasedBehavior.getPropertyActionName(propertyName),
           propertyLabel,
           `Update the value of ${propertyLabel}`,
           `Set property ${propertyName} of _PARAM0_ to _PARAM2_`,

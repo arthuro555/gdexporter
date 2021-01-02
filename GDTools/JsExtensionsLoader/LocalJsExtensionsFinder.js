@@ -1,12 +1,11 @@
-// Note: this file does not use export/imports nor Flow to allow its usage from Node.js
-const path = require('path');
-const fs = require('fs');
+const path = require("path");
+const fs = require("fs-extra-promise");
 
-const checkIfPathHasJsExtensionModule = extensionFolderPath => {
-  return new Promise(resolve => {
+const checkIfPathHasJsExtensionModule = (extensionFolderPath) => {
+  return new Promise((resolve) => {
     const jsExtensionModulePath = path.join(
       extensionFolderPath,
-      'JsExtension.js'
+      "JsExtension.js"
     );
     fs.stat(jsExtensionModulePath, (err, stats) => {
       if (err) {
@@ -18,32 +17,26 @@ const checkIfPathHasJsExtensionModule = extensionFolderPath => {
   });
 };
 
-const findJsExtensionModules = () => {
-  return Promise.resolve().then(() => {
-    const extensionsRoot = path.join(__dirname, "..", "Runtime", 'Extensions');
-    console.info(
-      `Searching for JS extensions (file called JsExtension.js) in ${extensionsRoot}...`
-    );
-    return new Promise((resolve, reject) => {
-      fs.readdir(extensionsRoot, (error, extensionFolders) => {
-        if (error) {
-          return reject(error);
-        }
-        const filteredExtensionFolders = extensionFolders.filter(folder => {
-          return folder.indexOf('Example') === -1;
-        });
+const findJsExtensionModules = (extensionsRoot) => {
+  console.info(
+    `Searching for JS extensions (file called JsExtension.js) in ${extensionsRoot}...`
+  );
+  return new Promise(async (resolve, reject) => {
+    const extensionFolders = await fs.readdirAsync(extensionsRoot);
 
-        Promise.all(
-          filteredExtensionFolders.map(extensionFolder =>
-            checkIfPathHasJsExtensionModule(
-              path.join(extensionsRoot, extensionFolder)
-            )
-          )
-        ).then(modulePaths => {
-          resolve(modulePaths.filter(modulePath => !!modulePath));
-        }, reject);
-      });
+    const filteredExtensionFolders = extensionFolders.filter((folder) => {
+      return folder.indexOf("Example") === -1;
     });
+
+    Promise.all(
+      filteredExtensionFolders.map((extensionFolder) =>
+        checkIfPathHasJsExtensionModule(
+          path.join(extensionsRoot, extensionFolder)
+        )
+      )
+    ).then((modulePaths) => {
+      resolve(modulePaths.filter((modulePath) => !!modulePath));
+    }, reject);
   });
 };
 

@@ -1,5 +1,5 @@
-const { mapVector, mapFor } = require('../MapFor');
-const { caseSensitiveSlug } = require('../CaseSensitiveSlug');
+const { mapVector, mapFor } = require("../MapFor");
+const { caseSensitiveSlug } = require("../CaseSensitiveSlug");
 const {
   declareInstructionOrExpressionMetadata,
   declareBehaviorInstructionOrExpressionMetadata,
@@ -9,26 +9,23 @@ const {
   isBehaviorLifecycleEventsFunction,
   isExtensionLifecycleEventsFunction,
   declareBehaviorPropertiesInstructionAndExpressions,
-} = require('./MetadataDeclarationHelpers');
+} = require("./MetadataDeclarationHelpers");
 
-const mangleName = (name        ) => {
-  return caseSensitiveSlug(name, '_', []);
+const mangleName = (name) => {
+  return caseSensitiveSlug(name, "_", []);
 };
 
 /** Generate the namespace for a free function. */
-const getFreeFunctionCodeNamespace = (
-  eventsFunction,
-  codeNamespacePrefix        
-) => {
-  return codeNamespacePrefix + '__' + mangleName(eventsFunction.getName());
+const getFreeFunctionCodeNamespace = (eventsFunction, codeNamespacePrefix) => {
+  return codeNamespacePrefix + "__" + mangleName(eventsFunction.getName());
 };
 
 /** Generate the namespace for a behavior function. */
 const getBehaviorFunctionCodeNamespace = (
   eventsBasedBehavior,
-  codeNamespacePrefix        
+  codeNamespacePrefix
 ) => {
-  return codeNamespacePrefix + '__' + mangleName(eventsBasedBehavior.getName());
+  return codeNamespacePrefix + "__" + mangleName(eventsBasedBehavior.getName());
 };
 
 /**
@@ -37,23 +34,23 @@ const getBehaviorFunctionCodeNamespace = (
 const loadProjectEventsFunctionsExtensions = (
   project,
   eventsFunctionCodeWriter
-)                       => {
+) => {
   return Promise.all(
     // First pass: generate extensions from the events functions extensions,
     // without writing code for the functions. This is useful as events in functions
     // could be using other functions, which would not yet be available as
     // extensions.
-    mapFor(0, project.getEventsFunctionsExtensionsCount(), i => {
+    mapFor(0, project.getEventsFunctionsExtensionsCount(), (i) => {
       return loadProjectEventsFunctionsExtension(
         project,
         project.getEventsFunctionsExtensionAt(i),
-        { skipCodeGeneration: true, eventsFunctionCodeWriter, }
+        { skipCodeGeneration: true, eventsFunctionCodeWriter }
       );
     })
   ).then(() =>
     Promise.all(
       // Second pass: generate extensions, including code.
-      mapFor(0, project.getEventsFunctionsExtensionsCount(), i => {
+      mapFor(0, project.getEventsFunctionsExtensionsCount(), (i) => {
         return loadProjectEventsFunctionsExtension(
           project,
           project.getEventsFunctionsExtensionAt(i),
@@ -69,16 +66,16 @@ const loadProjectEventsFunctionsExtensions = (
 module.exports.loadProjectEventsFunctionsExtensions = loadProjectEventsFunctionsExtensions;
 
 const loadProjectEventsFunctionsExtension = (
-  project           ,
-  eventsFunctionsExtension                            ,
-  options         
-)                => {
+  project,
+  eventsFunctionsExtension,
+  options
+) => {
   return generateEventsFunctionExtension(
     project,
     eventsFunctionsExtension,
     options
-  ).then(extension => {
-    gd.JsPlatform.get().addNewExtension(extension);
+  ).then((extension) => {
+    _GD.JsPlatform.get().addNewExtension(extension);
     extension.delete();
   });
 };
@@ -88,12 +85,12 @@ const loadProjectEventsFunctionsExtension = (
  * extension.
  */
 const getExtensionIncludeFiles = (
-  project           ,
-  eventsFunctionsExtension                            ,
-  options         ,
-  codeNamespacePrefix        
-)                => {
-  return mapFor(0, eventsFunctionsExtension.getEventsFunctionsCount(), i => {
+  project,
+  eventsFunctionsExtension,
+  options,
+  codeNamespacePrefix
+) => {
+  return mapFor(0, eventsFunctionsExtension.getEventsFunctionsCount(), (i) => {
     const eventsFunction = eventsFunctionsExtension.getEventsFunctionAt(i);
 
     if (isExtensionLifecycleEventsFunction(eventsFunction.getName())) {
@@ -101,7 +98,7 @@ const getExtensionIncludeFiles = (
         eventsFunction,
         codeNamespacePrefix
       );
-      const functionName = codeNamespace + '.func'; // TODO
+      const functionName = codeNamespace + ".func"; // TODO
 
       return options.eventsFunctionCodeWriter.getIncludeFileFor(functionName);
     }
@@ -114,15 +111,15 @@ const getExtensionIncludeFiles = (
  * Generate the code for the events based extension
  */
 const generateEventsFunctionExtension = (
-  project           ,
-  eventsFunctionsExtension                            ,
-  options         
-)                               => {
-  const extension = new gd.PlatformExtension();
+  project,
+  eventsFunctionsExtension,
+  options
+) => {
+  const extension = new _GD.PlatformExtension();
   declareExtension(extension, eventsFunctionsExtension);
 
   const codeNamespacePrefix =
-    'gdjs.evtsExt__' + mangleName(eventsFunctionsExtension.getName());
+    "gdjs.evtsExt__" + mangleName(eventsFunctionsExtension.getName());
 
   const extensionIncludeFiles = getExtensionIncludeFiles(
     project,
@@ -139,7 +136,7 @@ const generateEventsFunctionExtension = (
     // Generate all behaviors and their functions
     mapVector(
       eventsFunctionsExtension.getEventsBasedBehaviors(),
-      eventsBasedBehavior => {
+      (eventsBasedBehavior) => {
         return generateBehavior(
           project,
           extension,
@@ -154,7 +151,7 @@ const generateEventsFunctionExtension = (
     .then(() =>
       // Generate all free functions
       Promise.all(
-        mapFor(0, eventsFunctionsExtension.getEventsFunctionsCount(), i => {
+        mapFor(0, eventsFunctionsExtension.getEventsFunctionsCount(), (i) => {
           const eventsFunction = eventsFunctionsExtension.getEventsFunctionAt(
             i
           );
@@ -173,20 +170,20 @@ const generateEventsFunctionExtension = (
 };
 
 const generateFreeFunction = (
-  project           ,
-  extension                     ,
-  eventsFunctionsExtension                            ,
-  eventsFunction                  ,
-  options         ,
-  codeGenerationContext                       
-)                => {
+  project,
+  extension,
+  eventsFunctionsExtension,
+  eventsFunction,
+  options,
+  codeGenerationContext
+) => {
   const instructionOrExpression = declareInstructionOrExpressionMetadata(
     extension,
     eventsFunctionsExtension,
     eventsFunction
   );
   // By convention, first parameter is always the Runtime Scene.
-  instructionOrExpression.addCodeOnlyParameter('currentScene', '');
+  instructionOrExpression.addCodeOnlyParameter("currentScene", "");
   declareEventsFunctionParameters(eventsFunction, instructionOrExpression);
 
   // Hide "lifecycle" functions as they are called automatically by
@@ -199,7 +196,7 @@ const generateFreeFunction = (
     eventsFunction,
     codeGenerationContext.codeNamespacePrefix
   );
-  const functionName = codeNamespace + '.func';
+  const functionName = codeNamespace + ".func";
 
   const codeExtraInformation = instructionOrExpression.getCodeExtraInformation();
   codeExtraInformation
@@ -209,13 +206,13 @@ const generateFreeFunction = (
     .setFunctionName(functionName);
 
   // Always include the extension include files when using a free function.
-  codeGenerationContext.extensionIncludeFiles.forEach(includeFile => {
+  codeGenerationContext.extensionIncludeFiles.forEach((includeFile) => {
     codeExtraInformation.addIncludeFile(includeFile);
   });
 
   if (!options.skipCodeGeneration) {
-    const includeFiles = new gd.SetString();
-    const eventsFunctionsExtensionCodeGenerator = new gd.EventsFunctionsExtensionCodeGenerator(
+    const includeFiles = new _GD.SetString();
+    const eventsFunctionsExtensionCodeGenerator = new _GD.EventsFunctionsExtensionCodeGenerator(
       project
     );
     const code = eventsFunctionsExtensionCodeGenerator.generateFreeEventsFunctionCompleteCode(
@@ -234,7 +231,7 @@ const generateFreeFunction = (
     includeFiles
       .toNewVectorString()
       .toJSArray()
-      .forEach((includeFile        ) => {
+      .forEach((includeFile) => {
         codeExtraInformation.addIncludeFile(includeFile);
       });
 
@@ -254,13 +251,13 @@ const generateFreeFunction = (
 };
 
 function generateBehavior(
-  project           ,
-  extension                     ,
-  eventsFunctionsExtension                            ,
-  eventsBasedBehavior                       ,
-  options         ,
-  codeGenerationContext                       
-)                {
+  project,
+  extension,
+  eventsFunctionsExtension,
+  eventsBasedBehavior,
+  options,
+  codeGenerationContext
+) {
   const behaviorMetadata = declareBehaviorMetadata(
     extension,
     eventsBasedBehavior
@@ -278,12 +275,12 @@ function generateBehavior(
   behaviorMetadata.setIncludeFile(includeFile);
 
   // Always include the extension include files when using a behavior.
-  codeGenerationContext.extensionIncludeFiles.forEach(includeFile => {
+  codeGenerationContext.extensionIncludeFiles.forEach((includeFile) => {
     behaviorMetadata.addIncludeFile(includeFile);
   });
 
   return Promise.resolve().then(() => {
-    const behaviorMethodMangledNames = new gd.MapStringString();
+    const behaviorMethodMangledNames = new _GD.MapStringString();
 
     // Declare the instructions/expressions for properties
     declareBehaviorPropertiesInstructionAndExpressions(
@@ -292,7 +289,7 @@ function generateBehavior(
     );
 
     // Declare all the behavior functions
-    mapFor(0, eventsFunctionsContainer.getEventsFunctionsCount(), i => {
+    mapFor(0, eventsFunctionsContainer.getEventsFunctionsCount(), (i) => {
       const eventsFunction = eventsFunctionsContainer.getEventsFunctionAt(i);
 
       const eventsFunctionMangledName = mangleName(eventsFunction.getName());
@@ -322,8 +319,8 @@ function generateBehavior(
 
     // Generate code for the behavior and its methods
     if (!options.skipCodeGeneration) {
-      const includeFiles = new gd.SetString();
-      const behaviorCodeGenerator = new gd.BehaviorCodeGenerator(project);
+      const includeFiles = new _GD.SetString();
+      const behaviorCodeGenerator = new _GD.BehaviorCodeGenerator(project);
       const code = behaviorCodeGenerator.generateRuntimeBehaviorCompleteCode(
         eventsFunctionsExtension.getName(),
         eventsBasedBehavior,
@@ -345,7 +342,7 @@ function generateBehavior(
       includeFiles
         .toNewVectorString()
         .toJSArray()
-        .forEach((includeFile        ) => {
+        .forEach((includeFile) => {
           behaviorMetadata.addIncludeFile(includeFile);
         });
 
@@ -366,12 +363,10 @@ function generateBehavior(
 /**
  * Unload all extensions providing events functions of a project
  */
-const unloadProjectEventsFunctionsExtensions = (
-  project           
-)                       => {
+const unloadProjectEventsFunctionsExtensions = (project) => {
   return Promise.all(
-    mapFor(0, project.getEventsFunctionsExtensionsCount(), i => {
-      gd.JsPlatform.get().removeExtension(
+    mapFor(0, project.getEventsFunctionsExtensionsCount(), (i) => {
+      _GD.JsPlatform.get().removeExtension(
         project.getEventsFunctionsExtensionAt(i).getName()
       );
     })
@@ -383,15 +378,13 @@ module.exports.unloadProjectEventsFunctionsExtensions = unloadProjectEventsFunct
  * Given metadata about an instruction or an expression, tells if this was created
  * from an event function.
  */
-const isAnEventFunctionMetadata = (
-  instructionOrExpression                                              
-) => {
+const isAnEventFunctionMetadata = (instructionOrExpression) => {
   const parametersCount = instructionOrExpression.getParametersCount();
   if (parametersCount <= 0) return false;
 
   return (
     instructionOrExpression.getParameter(parametersCount - 1).getType() ===
-    'eventsFunctionContext'
+    "eventsFunctionContext"
   );
 };
 module.exports.isAnEventFunctionMetadata = isAnEventFunctionMetadata;
@@ -401,12 +394,12 @@ module.exports.isAnEventFunctionMetadata = isAnEventFunctionMetadata;
  * See also getFreeEventsFunctionType for the reverse operation.
  */
 const getFunctionNameFromType = (type) => {
-  const parts = type.split('::');
+  const parts = type.split("::");
   if (!parts.length)
     return {
-      name: '',
-      behaviorName: '',
-      extensionName: '',
+      name: "",
+      behaviorName: "",
+      extensionName: "",
     };
 
   return {
@@ -421,11 +414,8 @@ module.exports.getFunctionNameFromType = getFunctionNameFromType;
  * Get the type of a Events Function.
  * See also getFunctionNameFromType for the reverse operation.
  */
-const getFreeEventsFunctionType = (
-  extensionName        ,
-  eventsFunction                  
-) => {
-  return extensionName + '::' + eventsFunction.getName();
+const getFreeEventsFunctionType = (extensionName, eventsFunction) => {
+  return extensionName + "::" + eventsFunction.getName();
 };
 module.exports.getFreeEventsFunctionType = getFreeEventsFunctionType;
 
@@ -434,9 +424,7 @@ module.exports.getFreeEventsFunctionType = getFreeEventsFunctionType;
  * * 0 for a behavior "method",
  * * 1 for a free function (as the first parameter is by convention the runtimeScene).
  */
-const getParametersIndexOffset = (
-  isEventsBasedBehaviorMethod         
-) => {
+const getParametersIndexOffset = (isEventsBasedBehaviorMethod) => {
   return isEventsBasedBehaviorMethod
     ? 0 /*In the case of a behavior events function, the first two parameters are by convention the "Object" and "Behavior" */
     : 1; /*In the case of a free events function (i.e: not tied to a behavior), the first parameter is by convention the current scene and is not shown.*/

@@ -113,7 +113,7 @@ exports.fs = {
   },
   readDir: function(path, ext) {
     ext = ext.toUpperCase();
-    var output = new gd.VectorString();
+    var output = new _GD.VectorString();
     try {
       var files = [];
       if (fs.existsSync(path)) {
