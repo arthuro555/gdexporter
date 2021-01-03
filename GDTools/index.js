@@ -53,7 +53,6 @@ class WrappedGD {
       exportOptions.set(key, options[key]);
     }
     exporter.exportWholePixiProject(project, outputDir, exportOptions);
-    console.log(project.getProjectFile());
     exportOptions.delete();
     exporter.delete();
   }

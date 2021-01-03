@@ -1,5 +1,5 @@
 const argv = require("minimist")(process.argv.slice(2));
-const { exporter } = require("../main");
+const exporter = require("../main");
 
 const projectDir =
   argv["p"] || argv["project"] || argv["in"] || "./Project/game.json";
