@@ -1,4 +1,4 @@
-const loadGD = require("./GDTools");
+const loadGD = require("gdcore-tools");
 
 /**
  * @typedef Options The options accepted by the exporter.
