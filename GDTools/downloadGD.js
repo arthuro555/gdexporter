@@ -118,6 +118,17 @@ const downloadVersion = async function (versionTag) {
       })
       .finally(() => fs.removeAsync(zipPath))
       .then(() => console.info(`✅ Done extracting the GDevelop Runtime`))
+      .then(() => {
+        try {
+          fs.statSync(path.join(gdPath, "Runtime", "gd.ts"));
+        } catch {
+          console.info("↪️ Skipping TypeScript compilation, already compiled.");
+          return;
+        }
+        console.info(`🕗 Compiling Runtime...`);
+        return require("./build")(gdPath);
+      })
+      .catch((e) => console.error("❌ Fatal error! ", e))
   );
 
   // Download the fitting libGD version
