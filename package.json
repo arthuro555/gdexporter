@@ -4,8 +4,7 @@
   "description": "A CLI exporter for GDevelop projects",
   "main": "./main.js",
   "scripts": {
-    "start": "node ./bin/cli.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/cli.js"
   },
   "bin": {
     "gdexport": "./bin/cli"
@@ -27,8 +26,7 @@
   },
   "homepage": "https://github.com/arthuro555/gdexporter#readme",
   "dependencies": {
-    "fs-extra": "^9.1.0",
-    "gdcore-tools": "^1.0.1",
+    "gdcore-tools": "^1.0.2",
     "minimist": "^1.2.5"
   }
 }
