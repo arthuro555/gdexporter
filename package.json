@@ -2,7 +2,11 @@
   "name": "gdexporter",
   "version": "3.1.2",
   "description": "A CLI exporter for GDevelop projects",
-  "main": "./main.js",
+  "engines": {
+    "node": ">= 14.0.0"
+  },
+  "engineStrict": true,
+  "main": "./src/main.js",
   "scripts": {
     "start": "node ./bin/cli.js"
   },
@@ -27,6 +31,7 @@
   "homepage": "https://github.com/arthuro555/gdexporter#readme",
   "dependencies": {
     "gdcore-tools": "^1.0.2",
+    "jsdom": "^16.4.0",
     "minimist": "^1.2.5"
   }
 }
