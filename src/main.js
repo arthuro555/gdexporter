@@ -15,7 +15,9 @@ const pluginTools = require("./plugins");
  * @param {Options} [options] The export options.
  */
 module.exports = (projectPath, outputDir, options) => {
+  console.info(" ⌛ Loading plugins...");
   options?.plugins?.forEach(pluginTools.registerPlugin);
+  console.info(" ⌛ Loading GDevelop...");
   return loadGD(options?.gdevelopVersion).then((gd) => {
     return gd.loadProject(projectPath).then((project) => {
       pluginTools.runPreExport(project);
@@ -35,7 +37,7 @@ module.exports = (projectPath, outputDir, options) => {
       if (options?.buildType === "cordova") exportPath += "/www";
       pluginTools.runPostExport(exportPath);
 
-      console.log("✅ Done!")
+      console.log("✅ Done!");
     });
   });
 };
