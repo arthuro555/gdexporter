@@ -18,25 +18,27 @@ const postExportCallbacks = new Set();
 /**
  * Bootstraps JSDom and runs plugins using it.
  */
-const runDocument = (exportPath) => {
+const runDocument = async (exportPath) => {
   // First, check if JSDom is used by any plugin
   if (documentCallbacks.size === 0) return;
   console.info("⌛ Plugins are patching index.html...");
 
   // Load required dependencies
-  const { readFileSync, writeFileSync } = require("fs");
+  const { writeFile, readFile } = require("fs").promises;
   const { JSDOM } = require("jsdom");
 
   // Parse the document
   const document = new JSDOM(
-    readFileSync(require("path").join(exportPath, "index.html"))
+    await readFile(require("path").join(exportPath, "index.html"))
   );
 
   // Run the plugin functions
-  documentCallbacks.forEach((callback) => callback(document.window.document));
+  documentCallbacks.forEach(
+    async (callback) => await callback(document.window.document)
+  );
 
   // Write the new document
-  writeFileSync(exportPath + "/index.html", document.serialize());
+  await writeFile(exportPath + "/index.html", document.serialize());
 };
 
 module.exports = {
@@ -66,20 +68,20 @@ module.exports = {
    * Runs plugins preExport methods.
    * @param {gd.Project} project The gd.Project instance of the project
    */
-  runPreExport: (project) => {
+  runPreExport: async (project) => {
     if (preExportCallbacks.size === 0) return;
     console.info("⌛ Plugins are preprocessing the project...");
-    preExportCallbacks.forEach((callback) => callback(project));
+    preExportCallbacks.forEach(async (callback) => await callback(project));
   },
 
   /**
    * Runs plugins postExport methods.
    * @param {string} exportPath The path the project was exported to.
    */
-  runPostExport: (exportPath) => {
-    runDocument(exportPath);
+  runPostExport: async (exportPath) => {
+    await runDocument(exportPath);
     if (postExportCallbacks.size === 0) return;
     console.info("⌛ Plugins are postprocessing the export...");
-    postExportCallbacks.forEach((callback) => callback(exportPath));
+    postExportCallbacks.forEach(async (callback) => await callback(exportPath));
   },
 };

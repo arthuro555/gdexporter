@@ -14,30 +14,27 @@ const pluginTools = require("./plugins");
  * @param {string} outputDir Path to the output directory.
  * @param {Options} [options] The export options.
  */
-module.exports = (projectPath, outputDir, options) => {
+module.exports = async (projectPath, outputDir, options) => {
   console.info(" ⌛ Loading plugins...");
   options?.plugins?.forEach(pluginTools.registerPlugin);
+
   console.info(" ⌛ Loading GDevelop...");
-  return loadGD(options?.gdevelopVersion).then((gd) => {
-    return gd.loadProject(projectPath).then((project) => {
-      pluginTools.runPreExport(project);
+  const gd = await loadGD(options?.gdevelopVersion);
+  const project = await gd.loadProject(projectPath);
 
-      console.info(
-        "📦 Exporting for " + (options?.buildType || "HTML5 (default)")
-      );
+  await pluginTools.runPreExport(project);
 
-      gd.exportProject(project, outputDir, {
-        exportForElectron: options?.buildType === "electron",
-        exportForCordova: options?.buildType === "cordova",
-        exportForFacebookInstantGames: options?.buildType === "facebook",
-      });
-
-      let exportPath = outputDir;
-      if (options?.buildType === "electron") exportPath += "/app";
-      if (options?.buildType === "cordova") exportPath += "/www";
-      pluginTools.runPostExport(exportPath);
-
-      console.log("✅ Done!");
-    });
+  console.info("📦 Exporting for " + (options?.buildType || "HTML5 (default)"));
+  gd.exportProject(project, outputDir, {
+    exportForElectron: options?.buildType === "electron",
+    exportForCordova: options?.buildType === "cordova",
+    exportForFacebookInstantGames: options?.buildType === "facebook",
   });
+
+  let exportPath = outputDir;
+  if (options?.buildType === "electron") exportPath += "/app";
+  if (options?.buildType === "cordova") exportPath += "/www";
+  await pluginTools.runPostExport(exportPath);
+
+  console.log("✅ Done!");
 };
