@@ -9,12 +9,13 @@ const outputDir = argv["o"] || argv["out"] || "./Exported";
 const buildType = argv["build"] || argv["b"];
 const gdevelopVersion =
   argv["version"] || argv["tag"] || argv["v"] || argv["t"];
-const options = { buildType, gdevelopVersion };
+const options = { buildType, gdevelopVersion, verbose: argv["verbose"] };
 
 const configPath = join(process.cwd(), "gdexport.config.js");
 try {
   accessSync(configPath);
   try {
+    console.info("⌛ Loading config...");
     Object.assign(options, require(configPath));
   } catch (e) {
     console.log("❌ Error while loading config! ", e);

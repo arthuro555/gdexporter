@@ -14,6 +14,7 @@ The installation is done via npm, `npm install gdexporter`.
 | `--out` | `-o` | Path to the output direcory, where the game will be exported. Defaults to `"./Exported"`. |
 | `--build` | `-b` | The build type. It can be `"electron"`, `"cordova"` or `"facebook"`. If not specified or invalid, will export to HTML5. |
 | `--version` | `--tag`, `-v`, `-t` | The GDevelop version to use for exporting. It uses the github release tag (for example `v5.0.0-beta103`). Uses the latest release by default. |
+| `--verbose` | None | This flag enables showing logs from GDCore. |
 
 #### Configuration file
 You can add a configuration file to specify the gdexporter options. It has to be named `gdexport.config.js` and to be in the directory of execution of gdexporter. It is the recommended way to specify plugins.
