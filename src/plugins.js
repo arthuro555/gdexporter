@@ -11,9 +11,9 @@
  * @property {(exportPath) => void} [postExport] A method called with the path to the export at the end.
  */
 
-const preExportCallbacks = new Set();
-const documentCallbacks = new Set();
-const postExportCallbacks = new Set();
+const preExportCallbacks = [];
+const documentCallbacks = [];
+const postExportCallbacks = [];
 
 /**
  * Bootstraps JSDom and runs plugins using it.
@@ -33,8 +33,10 @@ const runDocument = async (exportPath) => {
   );
 
   // Run the plugin functions
-  documentCallbacks.forEach(
-    async (callback) => await callback(document.window.document)
+  await Promise.all(
+    documentCallbacks.map(
+      async (callback) => await callback(document.window.document)
+    )
   );
 
   // Write the new document
@@ -46,22 +48,43 @@ module.exports = {
    * Registers a plugin.
    * @param {PluginDescriptor} pluginDescriptor
    */
-  registerPlugin: ({ plugin, options }) => {
-    if (typeof plugin !== "function") {
-      console.error(
-        "❌ Error while loading a plugin: Make sure your module exports a function!"
-      );
-      return;
+  registerPlugin: (plugin) => {
+    let callbacks;
+    if (typeof plugin === "function") callbacks = plugin({});
+    else {
+      if (typeof plugin !== "object") {
+        console.error(
+          "❌ Error while loading the config: A plugin is neither a function nor an object!"
+        );
+        return;
+      }
+
+      const { plugin: pluginCtor, options } = plugin;
+
+      if (typeof options !== "object" && typeof options !== "undefined") {
+        console.error(
+          "❌ Error while loading the config: The options aren't a vlaid javascript object!"
+        );
+        return;
+      }
+      if (typeof pluginCtor !== "function") {
+        console.error(
+          "❌ Error while loading a plugin: Make sure your module exports a function!"
+        );
+        return;
+      }
+
+      callbacks = pluginCtor(options || {});
     }
-    const callbacks = plugin(options);
+
     if (typeof callbacks !== "object") {
       console.warn("⚠ A plugin function hasn't returned a valid object!");
       return;
     }
 
-    if (callbacks.preExport) preExportCallbacks.add(callbacks.preExport);
-    if (callbacks.document) documentCallbacks.add(callbacks.document);
-    if (callbacks.postExport) postExportCallbacks.add(callbacks.postExport);
+    if (callbacks.preExport) preExportCallbacks.push(callbacks.preExport);
+    if (callbacks.document) documentCallbacks.push(callbacks.document);
+    if (callbacks.postExport) postExportCallbacks.push(callbacks.postExport);
   },
 
   /**
@@ -71,7 +94,9 @@ module.exports = {
   runPreExport: async (project) => {
     if (preExportCallbacks.size === 0) return;
     console.info("⌛ Plugins are preprocessing the project...");
-    preExportCallbacks.forEach(async (callback) => await callback(project));
+    await Promise.all(
+      preExportCallbacks.map(async (callback) => await callback(project))
+    );
   },
 
   /**
@@ -82,6 +107,8 @@ module.exports = {
     await runDocument(exportPath);
     if (postExportCallbacks.size === 0) return;
     console.info("⌛ Plugins are postprocessing the export...");
-    postExportCallbacks.forEach(async (callback) => await callback(exportPath));
+    await Promise.all(
+      postExportCallbacks.map(async (callback) => await callback(exportPath))
+    );
   },
 };
