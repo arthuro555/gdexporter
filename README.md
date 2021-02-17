@@ -24,9 +24,7 @@ module.exports = {
   buildType: "electron",
   gdevelopVersion: "v5.0.0-beta105",
   plugins: [
-    {
-      plugin: require("myPlugin"),
-    },
+    require("myPlugin"),
     {
       plugin: require("./myOtherPlugin"),
       options: {
@@ -47,9 +45,7 @@ exporter("path/to/game.json", "path/to/export/directory", {
   buildType: "electron",
   gdevelopVersion: "v5.0.0-beta103",
   plugins: [
-    {
-      plugin: require("myPlugin"),
-    },
+    require("myPlugin"),
     {
       plugin: require("./myOtherPlugin"),
       options: {
