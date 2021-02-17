@@ -33,11 +33,8 @@ const runDocument = async (exportPath) => {
   );
 
   // Run the plugin functions
-  await Promise.all(
-    documentCallbacks.map(
-      async (callback) => await callback(document.window.document)
-    )
-  );
+  for (const callback of documentCallbacks)
+    await callback(document.window.document);
 
   // Write the new document
   await writeFile(exportPath + "/index.html", document.serialize());
@@ -94,9 +91,7 @@ module.exports = {
   runPreExport: async (project) => {
     if (preExportCallbacks.size === 0) return;
     console.info("⌛ Plugins are preprocessing the project...");
-    await Promise.all(
-      preExportCallbacks.map(async (callback) => await callback(project))
-    );
+    for (const callback of preExportCallbacks) await callback(project);
   },
 
   /**
@@ -107,8 +102,6 @@ module.exports = {
     await runDocument(exportPath);
     if (postExportCallbacks.size === 0) return;
     console.info("⌛ Plugins are postprocessing the export...");
-    await Promise.all(
-      postExportCallbacks.map(async (callback) => await callback(exportPath))
-    );
+    for (const callback of postExportCallbacks) await callback(exportPath);
   },
 };
