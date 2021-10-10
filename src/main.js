@@ -23,7 +23,7 @@ module.exports = async (projectPath, outputDir, options) => {
   const gd = await loadGD(options?.gdevelopVersion);
   if (options?.verbose)
     gd.on("print", (message) => console.log("ℹ️ [GDCore] " + message));
-  gd.on("error", (e) => console.error("❌ [GDCore] " + message));
+  gd.on("error", (message) => console.error("❌ [GDCore] " + message));
   console.info("⌛ Loading project...");
   const project = await gd.loadProject(projectPath);
 
