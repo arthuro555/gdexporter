@@ -1,6 +1,6 @@
 {
   "name": "gdexporter",
-  "version": "3.2.4",
+  "version": "3.2.5",
   "description": "A CLI exporter for GDevelop projects",
   "engines": {
     "node": ">= 14.0.0"
