@@ -22,6 +22,8 @@ You can add a configuration file to specify the gdexporter options. It has to be
 Example configuration file:
 ```js
 module.exports = {
+  project: "./game.json",
+  output: "./dist",
   buildType: "electron",
   gdevelopVersion: "v5.0.0-beta105",
   plugins: [
