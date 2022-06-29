@@ -5,6 +5,7 @@
   "engines": {
     "node": ">= 14.0.0"
   },
+  "types": "./types.d.ts",
   "engineStrict": true,
   "main": "./src/main.js",
   "scripts": {
