@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/arthuro555/gdexporter#readme",
   "dependencies": {
-    "gdcore-tools": "^1.0.7",
+    "gdcore-tools": "^1.0.8",
     "jsdom": "^16.4.0",
     "minimist": "^1.2.5"
   }
