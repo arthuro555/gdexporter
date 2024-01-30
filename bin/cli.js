@@ -6,9 +6,28 @@ const { join, resolve } = require("path");
 const projectDir = argv["p"] || argv["project"] || argv["in"] || "./game.json";
 const outputDir = argv["o"] || argv["out"] || "./dist";
 const buildType = argv["build"] || argv["b"];
-const gdevelopVersion =
-  argv["version"] || argv["tag"] || argv["v"] || argv["t"];
-const options = { buildType, gdevelopVersion, verbose: argv["verbose"] };
+const loadGDOptions = (() => {
+  const loadGdOptions = {
+    versionTag: argv["version"] || argv["tag"] || argv["v"] || argv["t"],
+    user: argv["user"] || argv["u"],
+    authToken: argv["authToken"] || argv["gitToken"] || argv["token"],
+  };
+  const useReleaseAssets = argv["useReleaseAssets"] || argv["useRelease"];
+  const libGDPath = argv["authToken"] || argv["gitToken"] || argv["token"];
+
+  if (useReleaseAssets) {
+    loadGdOptions.fetchProvider = { useReleaseAssets };
+  } else if (libGDPath) {
+    loadGdOptions.fetchProvider = { libGDPath };
+  }
+
+  return Object.keys(loadGdOptions).length ? loadGdOptions : null;
+})();
+const options = { buildType, verbose: argv["verbose"] };
+
+if (loadGDOptions) {
+  options.loadGDOptions = loadGDOptions
+}
 
 const configPath = join(process.cwd(), "gdexport.config.js");
 try {

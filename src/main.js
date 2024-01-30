@@ -5,6 +5,7 @@ const pluginTools = require("./plugins");
  * @typedef Options The options accepted by the exporter.
  * @property {"electron" | "cordova" | "facebook"} [buildType] The build type (defaults to HTML5).
  * @property {string} [gdevelopVersion] The version of GDevelop to use for exporting.
+ * @property {import("gdcore-tools").LoadGDOptions} [loadGDOptions] Advanced GDevelop version configuration to use for exporting.
  * @property {Array<import("./plugins").PluginDescriptor>} [plugins] A list of plugins to run.
  * @property {boolean} verbose True if messages from GDCore should be logged.
  */
@@ -20,7 +21,7 @@ module.exports = async (projectPath, outputDir, options) => {
   options?.plugins?.forEach(pluginTools.registerPlugin);
 
   console.info("⌛ Loading GDCore...");
-  const gd = await loadGD(options?.gdevelopVersion);
+  const gd = await loadGD(options?.gdevelopVersion || options?.loadGDOptions);
   if (options?.verbose)
     gd.on("print", (message) => console.log("ℹ️ [GDCore] " + message));
   gd.on("error", (message) => console.error("❌ [GDCore] " + message));
